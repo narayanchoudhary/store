@@ -1,0 +1,106 @@
+.flex-container {
+    display: flex;
+  }
+  
+  .flex-items {
+    background-color: #f1f1f1;
+    margin: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex-shrink: 0;
+    height: fit-content;
+  }
+  
+  .address {
+    width: 15%;
+  }
+  
+  .name {
+    width: 25%;
+  }
+  
+  .type {
+    width: 7%;
+  }
+  
+  .status {
+    width: 7%;
+  }
+  
+  .item {
+    width: 8%;
+  }
+  
+  
+  .receipt-number {
+    width: 6%;
+  }
+  
+  .packet {
+    width: 5%;
+    text-align: right;
+  }
+  
+  .gaye {
+    width: 5%;
+    text-align: right;
+  }
+  
+  .balance {
+    width: 5%;
+    text-align: right;
+  }
+  
+  .weight {
+    width: 8%;
+    text-align: right;
+  }
+  
+  .location {
+    width: 19%;
+  }
+  
+  .amount {
+    width: 7%;
+    text-align: right;
+  }
+  
+  .katarpatar {
+    width: 30%;
+  }
+  
+  .filters {
+    width: 100%;
+    box-sizing: border-box;
+    height: 100%;
+  }
+  
+  .filter-container {
+    overflow: visible;
+  }
+  
+  .input-filters {
+    box-sizing: border-box;
+    height: 38px;
+    align-items: center;
+    background-color: hsl(0, 0%, 100%);
+    border-color: hsl(0, 0%, 80%);
+    border-radius: 4px;
+    border-style: solid;
+    border-width: 1px;
+    outline: none;
+    text-indent: 8px;
+  }
+  
+  .input-filters:focus {
+    border: 1.5px solid #2684FF;
+  }
+  
+  .rashan {
+    /* background-color: rgb(212, 178, 245); */
+  }
+  
+  .total {
+    font-weight: bold;
+  }

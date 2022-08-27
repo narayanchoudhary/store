@@ -1,0 +1,81 @@
+.crDrList {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border: 1px solid gray;
+    padding: 4px;
+    cursor: pointer;
+}
+
+.crDrList:hover {
+    background: rgb(155, 185, 229);
+}
+
+.crDrListHeader {
+    background-color: #ccc;
+    font-size: 18px;
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    box-shadow: -2.2px 4.3px 4.3px hsl(0deg 0% 0% / 0.43);
+}
+
+.crDrListFooter {
+    background-color: #ccc;
+    font-size: 18px;
+    font-weight: bold;
+    position: sticky;
+    bottom: 0;
+    box-shadow: -2px -1px 10px 0px rgba(0, 0, 0, 0.75);
+}
+
+.crDrListContainer {
+    width: 60%;
+    margin: auto;
+}
+
+.crDrListName {
+    text-transform: capitalize;
+    text-align: left;
+    width: 50%;
+}
+
+.crDrListLena {
+    width: 10%;
+    text-align: right;
+}
+
+.crDrListDena {
+    width: 10%;
+    text-align: right;
+}
+
+.crDrListEven {
+    background-color: rgb(192, 225, 253);
+}
+
+.close-button {
+    border: none;
+    display: inline-block;
+    padding: 8px 16px;
+    vertical-align: middle;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    background-color: inherit;
+    text-align: center;
+    cursor: pointer;
+    white-space: nowrap;
+    position: absolute;
+    right: 0;
+    top: 0
+}
+
+.Overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);;
+  }

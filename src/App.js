@@ -1,24 +1,95 @@
-import logo from './logo.svg';
 import './App.css';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+} from "react-router-dom";
+import AvakRegister from './Components/AvakRegister/AvakRegister';
+import Khate from './Components/Khate/Khate';
+import { useEffect, useState } from "react";
+import axios from "axios";
+import moment from 'moment';
+import List from './Components/List/List';
 
 function App() {
+
+  const [accounts, setAccounts] = useState([]);
+
+  useEffect(() => {
+    axios.get("http://at:5000/depositors").then((dRes) => {
+      axios.get("http://at:5000/transactions").then((tRes) => {
+
+        let accounts = [];
+        dRes.data.forEach((depositor) => {
+          let account = {
+            ledgerId: depositor.LedgerId,
+            ledgerName: (depositor.DeptrName + ' ' + depositor.DeptrFatherName + ' ' + depositor.DeptrAddress).toLowerCase(),
+            rows: [],
+            closingBalance: 0,
+          };
+
+          let balance = depositor.AccOpeBalCr - depositor.AccOpeBalDr;
+          // Add Opening Balance row
+          if (balance !== 0)
+            account.rows.push({
+              date: depositor.AccOpeBalDate,
+              voucherNo: '-',
+              narration: 'Opening Balance',
+              cr: depositor.AccOpeBalCr !== 0 ? depositor.AccOpeBalCr : null,
+              dr: depositor.AccOpeBalDr !== 0 ? depositor.AccOpeBalDr : null,
+              balance: balance,
+            });
+
+          let filteredTransactions = [];
+          filteredTransactions = tRes.data.filter((t) => t.AccTransLedgerId === depositor.LedgerId);
+          if (filteredTransactions.length > 0) {
+            filteredTransactions.sort(function (a, b) {
+              // Turn your strings into dates, and then subtract them
+              // to get a value that is either negative, positive, or zero.
+              return new Date(moment(a.AccTransDate, "DD-MM-YY")) - new Date(moment(b.AccTransDate, "DD-MM-YY"));
+            });
+          }
+
+          filteredTransactions.forEach((transaction) => {
+            balance += transaction.AccTransCr - transaction.AccTransDr;
+            account.rows.push({
+              date: transaction.AccTransDate,
+              voucherNo: transaction.AccTransVoucherNo,
+              narration: transaction.AccTransNarration,
+              cr: transaction.AccTransCr !== 0 ? transaction.AccTransCr : null,
+              dr: transaction.AccTransDr !== 0 ? transaction.AccTransDr : null,
+              balance: balance
+            });
+          });
+
+          if (account.rows.length > 0)
+            account.closingBalance = account.rows[account.rows.length - 1].balance;
+
+          // if (account.rows.length > 0)
+          //   if (account.rows[account.rows.length - 1].balance !== 0)
+          //     list.push({
+          //       account
+          //       closingBalance: account.rows[account.rows.length - 1].balance,
+          //     })
+
+          accounts.push(account);
+        });
+        setAccounts(accounts);
+      });
+    });
+  }, []);
+
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<AvakRegister />} />
+        <Route path="/khate" element={<Khate accounts={accounts} />} />
+        <Route path='/list' element={<List accounts={accounts} />} />
+      </Routes>
+    </BrowserRouter>
+
   );
 }
 

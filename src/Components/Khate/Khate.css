@@ -1,0 +1,76 @@
+body {
+    font-family: 'Roboto', sans-serif;  
+  }
+  
+  .row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border: 1px solid gray;
+    padding: 4px;
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+  
+  .row div {
+    align-items: center;
+  }
+
+  .accountContainer {
+    margin-left: 6px;
+    margin-right: 6px;
+  }
+  
+  
+  .ledgerName {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+    text-decoration: double underline;
+    white-space: pre;
+    text-transform: capitalize;
+  }
+  
+  .header {
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #cccc;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+  }
+  
+  .footer {
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #cccc;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+  }
+
+  .date {
+    width: 14%;
+  }
+  
+  .voucherNo {
+    width: 14%;
+  }
+  
+  .narration {
+    width: 30%;
+  }
+  
+  .cr {
+    width: 14%;
+    text-align: right;
+  }
+  
+  .dr {
+    width: 14%;
+    text-align: right;
+  }
+  
+  .balance {
+    width: 14%;
+    text-align: right;
+  }
