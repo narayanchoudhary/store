@@ -1,5 +1,6 @@
 .flex-container {
     display: flex;
+    width: fit-content;
   }
   
   .flex-items {
@@ -13,47 +14,47 @@
   }
   
   .address {
-    width: 15%;
+    width: 150px;
   }
   
   .name {
-    width: 25%;
+    width: 300px;
   }
   
   .type {
-    width: 7%;
+    width: 110px;
   }
   
   .status {
-    width: 7%;
+    width: 100px;
   }
   
   .item {
-    width: 8%;
+    width: 150px;
   }
   
   
   .receipt-number {
-    width: 6%;
+    width: 100px;
   }
   
   .packet {
-    width: 5%;
+    width: 100px;
     text-align: right;
   }
   
   .gaye {
-    width: 5%;
+    width: 100px;
     text-align: right;
   }
   
-  .balance {
-    width: 5%;
+  .balancee {
+    width: 100px;
     text-align: right;
   }
   
   .weight {
-    width: 8%;
+    width: 130px;
     text-align: right;
   }
   
@@ -62,12 +63,16 @@
   }
   
   .amount {
-    width: 7%;
+    width: 120px;
     text-align: right;
   }
   
-  .katarpatar {
-    width: 30%;
+  .location {
+    width: 200px;
+  }
+
+  .hammali {
+    width: 150px;
   }
   
   .filters {
@@ -103,4 +108,19 @@
   
   .total {
     font-weight: bold;
+  }
+
+  .totalRow {
+    position: sticky;
+    bottom: 0;
+    background-color: wheat;
+    box-shadow: 0px -1px 5px 0px rgba(0,0,0,0.75);
+
+  }
+
+  .topSticky {
+    position: sticky;
+    top: 0;
+    background-color: wheat;
+    box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.75);
   }

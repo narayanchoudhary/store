@@ -147,8 +147,8 @@ function AvakRegister() {
   }, [filteredData, selectedItems]);
 
   return (
-    <div>
-      <div className='flex-container'>
+    <div className='avak-register'>
+      <div className='flex-container topSticky'>
         <div className=' flex-items address filter-container'>
           <Select
             options={addresses}
@@ -227,7 +227,7 @@ function AvakRegister() {
             placeholder='Gaye'
           />
         </div>
-        <div className=' flex-items balance'>
+        <div className=' flex-items balancee'>
           <input
             className='filters input-filters'
             type='text'
@@ -254,11 +254,18 @@ function AvakRegister() {
             placeholder='Amount'
           />
         </div>
+        <div className='flex-items location'>
+          
+        </div>
+        <div className='flex-items hammali'>
+
+        </div>
+
         {/*<div className=' flex-items packet'><input className='filters' type='text' /></div>
         <div className=' flex-items weight'><input className='filters' type='text' /></div>
         <div className=' flex-items location'><input className='filters' type='text' /></div> */}
       </div>
-      {filteredData.map(item => {
+      {filteredData.map((item, index) => {
         let className = 'flex-container';
         let weight = item.DGPassWeightInQuintal;
         if (item.DReqNo.includes('R')) {
@@ -268,7 +275,7 @@ function AvakRegister() {
 
         return (
 
-          <div className={className}>
+          <div className={className} >
             <div className=' flex-items address'>{item.DeptrAddress}</div>
             <div className=' flex-items name'>{item.DeptrName + ' ' + item.DeptrFatherName}</div>
             <div className=' flex-items type'>&nbsp;{item.type}</div>
@@ -277,27 +284,28 @@ function AvakRegister() {
             <div className=' flex-items receipt-number'>{item.DReqNo}</div>
             <div className=' flex-items packet'>{item.DGPassNoOfLUnit} &nbsp;</div>
             <div className=' flex-items gaye'>{item.DONoOfLUnit} &nbsp;</div>
-            <div className=' flex-items balance'>{item.DGPassNoOfLUnit - item.DONoOfLUnit} &nbsp;</div>
+            <div className=' flex-items balancee'>{item.DGPassNoOfLUnit - item.DONoOfLUnit} &nbsp;</div>
             <div className=' flex-items weight'>{Math.round(weight)} kg &nbsp;</div>
             <div className=' flex-items amount'> &nbsp;{Math.round(item.DGPassWeightInQuintal * item.RadRentPerPeriod)}/- &#8377; &nbsp;</div>
             <div className=' flex-items location'> &nbsp; {item.DGPassRemark}</div>
-            <div className=' flex-items location'> &nbsp; {item.BillTotalAmt}</div>
+            <div className=' flex-items hammali'> &nbsp; {item.BillTotalAmt}</div>
           </div>
         )
       })}
-      <div className='flex-container'>
+      <div className='flex-container totalRow'>
         <div className=' flex-items address'>{ }</div>
         <div className=' flex-items name'>{ }</div>
         <div className=' flex-items type'>{ }</div>
         <div className=' flex-items status'></div>
         <div className=' flex-items item'>{ }</div>
-        <div className=' flex-items receipt-number'>{ }</div>
+        <div className=' flex-items total receipt-number'>{'Total-->'}</div>
         <div className=' flex-items total packet'>{totals.packet} &nbsp;</div>
         <div className=' flex-items total gaye'>{totals.gaye} &nbsp;</div>
-        <div className=' flex-items total balance'>{totals.balance} &nbsp;</div>
+        <div className=' flex-items total balancee'>{totals.balance} &nbsp;</div>
         <div className=' flex-items total weight'>{totals.weight} kg &nbsp;</div>
         <div className=' flex-items total amount'> &nbsp;{totals.rent}/- &#8377; &nbsp;</div>
         <div className=' flex-items total location'>{ }</div>
+        <div className=' flex-items total hammali'>{ }</div>
       </div>
     </div>
   );
