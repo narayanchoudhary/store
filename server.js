@@ -1,5 +1,7 @@
 var express = require('express');
 var sql = require("mssql");
+// const connectDB = require('./connectDB');
+// const Connection = require('tedious').Connection;
 
 var app = express();
 // config for your database
@@ -47,7 +49,7 @@ app.get('/depositors', function (req, res) {
         var request = new sql.Request();
 
         // query to the database and get the records
-        request.query("select LedgerId, LedgerName, DeptrName, DeptrFatherName, DeptrAddress, convert(varchar, AccOpeBalDate, 5) as AccOpeBalDate, AccOpeBalDr, AccOpeBalCr from AccLedgerMaster JOIN GM_DepositorMaster ON LedgerId = DeptrOwnerLedgerId JOIN AccLedgerOpeBalance ON LedgerId = AccOpeBalLedgerId  WHERE LedgerGroupId = '47' ORDER BY LedgerName", function (err, recordset) {
+        request.query("select LedgerId, LedgerName, DeptrName, DeptrFatherName, DeptrAddress, convert(varchar, AccOpeBalDate, 5) as AccOpeBalDate, AccOpeBalDr, AccOpeBalCr from AccLedgerMaster JOIN GM_DepositorMaster ON LedgerId = DeptrOwnerLedgerId JOIN AccLedgerOpeBalance ON LedgerId = AccOpeBalLedgerId  WHERE LedgerGroupId = '47' AND AccOpeBalDate = '2022-04-01' ORDER BY LedgerName", function (err, recordset) {
 
             if (err) console.log(err)
 
@@ -68,7 +70,7 @@ app.get('/transactions', function (req, res) {
         var request = new sql.Request();
 
         // query to the database and get the records
-        request.query("select AccTransLedgerId, AccTransCr, AccTransDr, AccTransType, AccTransVoucherNo, convert(varchar, AccTransDate, 5) as AccTransDate, AccTransNarration from AccTrans WHERE AccTransDate >= '2021-04-01' AND AccTransDate <= '2022-03-31' ORDER BY AccTransDate", function (err, recordset) {
+        request.query("select AccTransLedgerId, AccTransCr, AccTransDr, AccTransType, AccTransVoucherNo, convert(varchar, AccTransDate, 5) as AccTransDate, AccTransNarration from AccTrans WHERE AccTransDate >= '2022-04-01' AND AccTransDate <= '2023-03-31' ORDER BY AccTransDate", function (err, recordset) {
 
             if (err) console.log(err)
 
@@ -80,3 +82,76 @@ app.get('/transactions', function (req, res) {
 var server = app.listen(5000, function () {
     console.log('Server is running..');
 });
+
+
+// var config = {
+//     server: 'HOT',
+//     authentication: { type: 'default', options: { userName: 'sa', password: 'sa', } },
+//     options: {
+//         encrypt: false,
+//         trustServerCertificate: true
+
+//     },
+//     database: 'HARIOM2023',
+// };
+
+// sql.connect(config, function (err) {
+
+//     if (err) console.log(err);
+
+// });
+
+
+
+// connectDB();
+
+
+// var config = {
+//     server: "HOT",
+//     port: 1433,
+
+//     options: {
+//         encrypt: false,
+//         database: "HOT2223",
+//         packetSize: 4096,
+//     },
+//     authentication: {
+//         type: "default",
+//         options: {
+//             userName: "sa",
+//             password: "sa",
+//         }
+//     }
+// };
+
+// var connection = new Connection(config);
+
+
+
+// connection.on('error', (err) => {
+//     console.log(err)
+// })
+
+
+// connection.on('connect', function (err) {
+//     // executeStatement();
+//     console.log('connected')
+//     //executeInsert();
+//     if (err) {
+//         console.error(err.message)
+//     }
+
+// }
+// );
+
+
+
+// connection.connect((err) => {
+//     if (err) {
+//         console.log(err)
+//         return;
+//     }
+
+//     console.log('Connected')
+// });
+

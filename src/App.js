@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import moment from 'moment';
 import List from './Components/List/List';
+import Account from './Components/Account/Account';
 
 function App() {
 
@@ -56,9 +57,9 @@ function App() {
               date: transaction.AccTransDate,
               voucherNo: transaction.AccTransVoucherNo,
               narration: transaction.AccTransNarration,
-              cr: transaction.AccTransCr !== 0 ? transaction.AccTransCr : null,
-              dr: transaction.AccTransDr !== 0 ? transaction.AccTransDr : null,
-              balance: balance
+              cr: parseFloat(transaction.AccTransCr.toFixed(2)) !== 0 ? parseFloat(transaction.AccTransCr.toFixed(2)) : null,
+              dr: parseFloat(transaction.AccTransDr.toFixed(2)) !== 0 ? parseFloat(transaction.AccTransDr.toFixed(2)) : null,
+              balance: parseFloat(balance.toFixed(2))
             });
           });
 
@@ -87,6 +88,7 @@ function App() {
         <Route path="/" element={<AvakRegister />} />
         <Route path="/khate" element={<Khate accounts={accounts} />} />
         <Route path='/list' element={<List accounts={accounts} />} />
+        <Route path='/account' element={<Account />} />
       </Routes>
     </BrowserRouter>
 
