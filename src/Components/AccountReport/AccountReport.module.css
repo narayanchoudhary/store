@@ -1,0 +1,45 @@
+.packet {
+    text-align: right;
+}
+
+.amount {
+    text-align: right;
+}
+
+.table {
+    box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.75);
+
+}
+
+.table, td, th {
+    border: 1px solid gray;
+    border-collapse: collapse;
+    padding: 4px;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+.particular {
+    text-align: right;
+}
+
+.chips {
+    background-color: rgb(207, 242, 255);
+}
+
+.rashan {
+    background-color: rgb(251, 255, 224);
+}
+
+.debit {
+    color: crimson;
+}
+
+.credit {
+    color: #19a76c;
+}
+
+.tableHeader {
+    background-color: #ccc;
+    box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.75);
+}

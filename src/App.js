@@ -11,14 +11,15 @@ import axios from "axios";
 import moment from 'moment';
 import List from './Components/List/List';
 import Account from './Components/Account/Account';
+import Root from './Components/Report/Report';
 
 function App() {
 
   const [accounts, setAccounts] = useState([]);
 
   useEffect(() => {
-    axios.get("http://at:5000/depositors").then((dRes) => {
-      axios.get("http://at:5000/transactions").then((tRes) => {
+    axios.get("http://narayan:5000/depositors").then((dRes) => {
+      axios.get("http://narayan:5000/transactions").then((tRes) => {
 
         let accounts = [];
         dRes.data.forEach((depositor) => {
@@ -85,7 +86,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<AvakRegister />} />
+        <Route path="/" element={<Root />} />
+        <Route path="/avakRegister" element={<AvakRegister />} />
         <Route path="/khate" element={<Khate accounts={accounts} />} />
         <Route path='/list' element={<List accounts={accounts} />} />
         <Route path='/account' element={<Account />} />

@@ -1,9 +1,16 @@
 var express = require('express');
 var sql = require("mssql");
+const cors = require('cors'); // Import the cors package
+const bodyParser = require('body-parser'); // Import the body-parser package
+
 // const connectDB = require('./connectDB');
 // const Connection = require('tedious').Connection;
 
 var app = express();
+app.use(cors());
+app.use(bodyParser.json()); // Parse JSON payloads
+app.use(bodyParser.urlencoded({ extended: true })); // Parse URL-encoded payloads
+
 // config for your database
 var config = {
     server: 'ASUS-PC',
@@ -28,11 +35,13 @@ app.get('/', function (req, res) {
         var request = new sql.Request();
 
         // query to the database and get the records
-        request.query("select BillTotalAmt, COALESCE(sum(DONoOfLUnit),0) as DONoOfLUnit, DeptrId, DeptrName, DeptrFatherName, DeptrAddress, ItemName, DGPassNo, DReqNo, DGPassNoOfLUnit, DGPassWeightInQuintal , DGPassRemark,DGPassDate, RadRentPerPeriod from GM_DepositGatePass JOIN GM_DepositorMaster ON GM_DepositGatePass.DGPassDeptrId = GM_DepositorMaster.DeptrId JOIN GM_ItemMaster ON GM_DepositGatePass.DGPassItemId = GM_ItemMaster.ItemId JOIN GM_DepositRequest ON GM_DepositRequest.DReqId =  GM_DepositGatePass.DGPassId JOIN CM_RentAgreemenDetail ON GM_DepositRequest.DReqAgreementId = CM_RentAgreemenDetail.RadRentAgreementId LEFT JOIN GM_DeliveryOrder ON GM_DepositRequest.DReqId = GM_DeliveryOrder.DOWhrId LEFT JOIN GM_HambaliBillHeader ON DGPassId = BillWHRId  WHERE DGPassDate >= '2022-01-01' GROUP BY DeptrId, DeptrName, DeptrFatherName, DeptrAddress, ItemName, DGPassNo, DReqNo, DGPassNoOfLUnit, DGPassWeightInQuintal , DGPassRemark,DGPassDate, RadRentPerPeriod, BillTotalAmt ORDER BY DGPassNo ", function (err, recordset) {
+        request.query("select COALESCE(sum(DONoOfLUnit),0) as DONoOfLUnit, DeptrId, DeptrName, DeptrFatherName, DeptrAddress, ItemName, DGPassNo, DReqNo, DGPassNoOfLUnit, DGPassWeightInQuintal , DGPassRemark,DGPassDate, RadRentPerPeriod from GM_DepositGatePass JOIN GM_DepositorMaster ON GM_DepositGatePass.DGPassDeptrId = GM_DepositorMaster.DeptrId JOIN GM_ItemMaster ON GM_DepositGatePass.DGPassItemId = GM_ItemMaster.ItemId JOIN GM_DepositRequest ON GM_DepositRequest.DReqId =  GM_DepositGatePass.DGPassId JOIN CM_RentAgreemenDetail ON GM_DepositRequest.DReqAgreementId = CM_RentAgreemenDetail.RadRentAgreementId LEFT JOIN GM_DeliveryOrder ON GM_DepositRequest.DReqId = GM_DeliveryOrder.DOWhrId WHERE DGPassDate >= '2023-01-01' GROUP BY DeptrId, DeptrName, DeptrFatherName, DeptrAddress, ItemName, DGPassNo, DReqNo, DGPassNoOfLUnit, DGPassWeightInQuintal , DGPassRemark,DGPassDate, RadRentPerPeriod ORDER BY DGPassNo ", function (err, recordset) {
 
-            if (err) console.log(err)
-
-            res.send(recordset.recordsets[0]);
+            if (err) {
+                console.log(err)
+                res.send(err);
+            } else
+                res.send(recordset.recordsets[0]);
         });
     });
 });
@@ -54,6 +63,30 @@ app.get('/depositors', function (req, res) {
             if (err) console.log(err)
 
             res.send(recordset.recordsets[0]);
+        });
+    });
+});
+
+app.post('/api/sqlquery', async (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+
+    const { query } = req.body;
+
+    sql.connect(config, function (err) {
+
+        if (err) console.log(err);
+
+        // create Request object
+        var request = new sql.Request();
+
+        // query to the database and get the records
+        request.query(query, function (err, recordset) {
+
+            if (err) {
+                console.log(err)
+                res.send(err.originalError.info);
+            } else
+                res.send(recordset.recordsets[0]);
         });
     });
 });

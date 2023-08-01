@@ -34,7 +34,7 @@ function AvakRegister() {
   });
 
   useEffect(() => {
-    axios.get('http://at:5000')
+    axios.get('http://narayan:5000')
       .then(res => {
         setData(res.data);
 
@@ -255,7 +255,7 @@ function AvakRegister() {
           />
         </div>
         <div className='flex-items location'>
-          
+
         </div>
         <div className='flex-items hammali'>
 
