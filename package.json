@@ -2,6 +2,10 @@
   "name": "store",
   "version": "0.1.0",
   "private": true,
+  "main": "main.js",
+  "homepage": "./",
+  "author": "Narayan",
+  "description": "This is description of the this application",
   "dependencies": {
     "@react-pdf/renderer": "^2.3.0",
     "@testing-library/jest-dom": "^5.16.4",
@@ -10,6 +14,7 @@
     "axios": "^0.27.2",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
+    "electron-squirrel-startup": "^1.0.0",
     "express": "^4.18.1",
     "moment": "^2.29.4",
     "mssql": "^8.1.2",
@@ -24,11 +29,22 @@
     "tedious": "^15.1.2",
     "web-vitals": "^2.1.4"
   },
+  "devDependencies": {
+    "@electron-forge/cli": "^6.2.1",
+    "@electron-forge/maker-deb": "^6.2.1",
+    "@electron-forge/maker-rpm": "^6.2.1",
+    "@electron-forge/maker-squirrel": "^6.2.1",
+    "@electron-forge/maker-zip": "^6.2.1",
+    "@electron-forge/plugin-auto-unpack-natives": "^6.2.1",
+    "electron": "^25.3.2"
+  },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "electron-forge start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
   },
   "eslintConfig": {
     "extends": [

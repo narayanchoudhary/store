@@ -1,13 +1,36 @@
-const seq = require('./db.js');
+const sql = require('mssql');
 
-const connectDB = async () => {
+const config = {
+    server: 'ASUS-PC',
+    authentication: {
+        type: 'default',
+        options: { userName: 'SA', password: 'open' },
+    },
+    options: {
+        encrypt: false,
+        trustServerCertificate: true,
+    },
+    pool: {
+        max: 10,
+        min: 0,
+        idleTimeoutMillis: 30000
+    },
+    database: 'Hariom',
+};
+
+// Function to connect to the database and return the pool object
+async function getPool() {
     try {
-        await seq.authenticate();
-        console.log('Connected DB')
-    } catch (err) {
-
-        console.error('unable to connect', err.message)
+        const pool = new sql.ConnectionPool(config);
+        await pool.connect();
+        console.log('Connected to SQL Server.');
+        return pool;
+    } catch (error) {
+        console.error('Error connecting to SQL Server:', error);
+        throw error;
     }
 }
 
-module.exports = connectDB;
+module.exports = {
+    getPool,
+};
