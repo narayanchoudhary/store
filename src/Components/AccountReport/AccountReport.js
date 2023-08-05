@@ -80,7 +80,7 @@ const AccountReport = ({ year, depositor }) => {
                             LEFT JOIN
                                 GM_DeliveryOrder ON GM_DepositRequest.DReqId = GM_DeliveryOrder.DOWhrId
                             WHERE
-                                DGPassDeptrId = ${depositor.value + 1}
+                                DGPassAgentId = ${depositor.value}
                             AND
                                 DGPassDate >= '${year.startYear}-01-01'
                             AND

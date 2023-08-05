@@ -28,7 +28,7 @@ const SelectDepositor = ({ onChange }) => {
                             FROM 
                                 GM_DepositorMaster
                             WHERE
-                                DeptrOwnerLedgerId != 0
+                                DeptrIsAgent = 'true'
                             ORDER BY
                                 DeptrName
                                 `,
