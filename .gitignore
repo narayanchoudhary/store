@@ -12,6 +12,7 @@
 /build
 /out
 /out.zip
+/dist
 # misc
 .DS_Store
 .env.local
