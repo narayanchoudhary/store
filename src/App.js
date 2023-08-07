@@ -3,6 +3,7 @@ import {
   BrowserRouter,
   Routes,
   Route,
+  HashRouter,
 } from "react-router-dom";
 import AvakRegister from './Components/AvakRegister/AvakRegister';
 import Khate from './Components/Khate/Khate';
@@ -83,14 +84,14 @@ function App() {
 
 
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route path="/" element={<Root />} />
         <Route path="/avakRegister" element={<AvakRegister />} />
         <Route path="/khate" element={<Khate accounts={accounts} />} />
         <Route path='/list' element={<List accounts={accounts} />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
 
   );
 }
