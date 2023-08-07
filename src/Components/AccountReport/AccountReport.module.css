@@ -43,3 +43,16 @@
     background-color: #ccc;
     box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.75);
 }
+
+.dptrLabel {
+    width: 100%;
+    text-align: center;
+    font-size: large;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.wrapper {
+    margin-bottom: 12px;
+    text-transform: capitalize;
+}

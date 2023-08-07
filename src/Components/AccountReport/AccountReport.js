@@ -172,7 +172,8 @@ const AccountReport = ({ year, depositor }) => {
 
 
     return (
-        <div>
+        <div className={styles.wrapper}>
+            <div className={styles.dptrLabel}>{depositor && depositor.label}</div>
             <table className={styles.table}>
                 <thead>
                     <tr className={styles.tableHeader}>

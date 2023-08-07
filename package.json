@@ -2,10 +2,30 @@
   "name": "store",
   "version": "0.1.0",
   "private": true,
-  "main": "main.js",
+  "main": "public/electron.js",
   "homepage": "./",
   "author": "Narayan",
   "description": "This is description of the this application",
+  "build": {
+    "appId": "myAppId",
+    "files": [
+      "build/**/*",
+      "node_modules/**/*"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "squirrel",
+          "arch": [
+            "ia32"
+          ]
+        }
+      ]
+    }
+  },
   "dependencies": {
     "@react-pdf/renderer": "^2.3.0",
     "@testing-library/jest-dom": "^5.16.4",
@@ -14,6 +34,8 @@
     "axios": "^0.27.2",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
+    "electron-builder-squirrel-windows": "^24.6.3",
+    "electron-is-dev": "^2.0.0",
     "electron-squirrel-startup": "^1.0.0",
     "express": "^4.18.1",
     "moment": "^2.29.4",
@@ -30,21 +52,20 @@
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
-    "@electron-forge/cli": "^6.2.1",
-    "@electron-forge/maker-deb": "^6.2.1",
-    "@electron-forge/maker-rpm": "^6.2.1",
-    "@electron-forge/maker-squirrel": "^6.2.1",
-    "@electron-forge/maker-zip": "^6.2.1",
-    "@electron-forge/plugin-auto-unpack-natives": "^6.2.1",
-    "electron": "^25.3.2"
+    "concurrently": "^8.2.0",
+    "electron": "^25.4.0",
+    "electron-builder": "^24.6.3",
+    "wait-on": "^7.0.1"
   },
   "scripts": {
-    "start": "electron-forge start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "package": "electron-forge package",
-    "make": "electron-forge make"
+    "dist": "electron-builder",
+    "electron-dev": "concurrently \"SET BROWSER=none&&npm run start\" \"wait-on http://localhost:3000 && electron .\"",
+    "electron-pack": "electron-builder -c.extraMetadata.main=build/electron.js",
+    "preelectron-pack": "npm run build"
   },
   "eslintConfig": {
     "extends": [

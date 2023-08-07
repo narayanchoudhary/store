@@ -11,6 +11,8 @@
 # production
 /build
 /out
+/dist
+
 /out.zip
 /dist
 # misc
