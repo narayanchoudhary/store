@@ -10,7 +10,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import moment from 'moment';
 import List from './Components/List/List';
-import Account from './Components/Account/Account';
 import Root from './Components/Report/Report';
 
 function App() {
@@ -90,7 +89,6 @@ function App() {
         <Route path="/avakRegister" element={<AvakRegister />} />
         <Route path="/khate" element={<Khate accounts={accounts} />} />
         <Route path='/list' element={<List accounts={accounts} />} />
-        <Route path='/account' element={<Account />} />
       </Routes>
     </BrowserRouter>
 

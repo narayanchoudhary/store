@@ -1,190 +1,69 @@
 var express = require('express');
-var sql = require("mssql");
-const cors = require('cors'); // Import the cors package
-const bodyParser = require('body-parser'); // Import the body-parser package
-
-// const connectDB = require('./connectDB');
-// const Connection = require('tedious').Connection;
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const { getPool } = require('./connectDB');
 
 var app = express();
 app.use(cors());
-app.use(bodyParser.json()); // Parse JSON payloads
-app.use(bodyParser.urlencoded({ extended: true })); // Parse URL-encoded payloads
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-// config for your database
-var config = {
-    server: 'ASUS-PC',
-    authentication: { type: 'default', options: { userName: 'SA', password: 'open', } },
-    options: {
-        encrypt: false,
-        trustServerCertificate: true
 
-    },
-    database: 'Hariom',
-};
+async function startServer() {
 
-app.get('/', function (req, res) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
+    try {
+        let pool = await getPool();
 
-    // connect to your database
-    sql.connect(config, function (err) {
+        app.get('/', function (req, res) {
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            pool.query("select COALESCE(sum(DONoOfLUnit),0) as DONoOfLUnit, DeptrId, DeptrName, DeptrFatherName, DeptrAddress, ItemName, DGPassNo, DReqNo, DGPassNoOfLUnit, DGPassWeightInQuintal , DGPassRemark,DGPassDate, RadRentPerPeriod from GM_DepositGatePass JOIN GM_DepositorMaster ON GM_DepositGatePass.DGPassDeptrId = GM_DepositorMaster.DeptrId JOIN GM_ItemMaster ON GM_DepositGatePass.DGPassItemId = GM_ItemMaster.ItemId JOIN GM_DepositRequest ON GM_DepositRequest.DReqId =  GM_DepositGatePass.DGPassId JOIN CM_RentAgreemenDetail ON GM_DepositRequest.DReqAgreementId = CM_RentAgreemenDetail.RadRentAgreementId LEFT JOIN GM_DeliveryOrder ON GM_DepositRequest.DReqId = GM_DeliveryOrder.DOWhrId WHERE DGPassDate >= '2023-01-01' GROUP BY DeptrId, DeptrName, DeptrFatherName, DeptrAddress, ItemName, DGPassNo, DReqNo, DGPassNoOfLUnit, DGPassWeightInQuintal , DGPassRemark,DGPassDate, RadRentPerPeriod ORDER BY DGPassNo ", function (err, recordset) {
+                if (err) {
+                    console.log(err)
+                    res.send(err);
+                } else
+                    res.send(recordset.recordsets[0]);
+            });
+        });
 
-        if (err) console.log(err);
-
-        // create Request object
-        var request = new sql.Request();
-
-        // query to the database and get the records
-        request.query("select COALESCE(sum(DONoOfLUnit),0) as DONoOfLUnit, DeptrId, DeptrName, DeptrFatherName, DeptrAddress, ItemName, DGPassNo, DReqNo, DGPassNoOfLUnit, DGPassWeightInQuintal , DGPassRemark,DGPassDate, RadRentPerPeriod from GM_DepositGatePass JOIN GM_DepositorMaster ON GM_DepositGatePass.DGPassDeptrId = GM_DepositorMaster.DeptrId JOIN GM_ItemMaster ON GM_DepositGatePass.DGPassItemId = GM_ItemMaster.ItemId JOIN GM_DepositRequest ON GM_DepositRequest.DReqId =  GM_DepositGatePass.DGPassId JOIN CM_RentAgreemenDetail ON GM_DepositRequest.DReqAgreementId = CM_RentAgreemenDetail.RadRentAgreementId LEFT JOIN GM_DeliveryOrder ON GM_DepositRequest.DReqId = GM_DeliveryOrder.DOWhrId WHERE DGPassDate >= '2023-01-01' GROUP BY DeptrId, DeptrName, DeptrFatherName, DeptrAddress, ItemName, DGPassNo, DReqNo, DGPassNoOfLUnit, DGPassWeightInQuintal , DGPassRemark,DGPassDate, RadRentPerPeriod ORDER BY DGPassNo ", function (err, recordset) {
-
-            if (err) {
-                console.log(err)
-                res.send(err);
-            } else
+        app.get('/depositors', function (req, res) {
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            pool.query("select LedgerId, LedgerName, DeptrName, DeptrFatherName, DeptrAddress, convert(varchar, AccOpeBalDate, 5) as AccOpeBalDate, AccOpeBalDr, AccOpeBalCr from AccLedgerMaster JOIN GM_DepositorMaster ON LedgerId = DeptrOwnerLedgerId JOIN AccLedgerOpeBalance ON LedgerId = AccOpeBalLedgerId  WHERE LedgerGroupId = '47' AND AccOpeBalDate = '2022-04-01' ORDER BY LedgerName", function (err, recordset) {
+                if (err) console.log(err)
                 res.send(recordset.recordsets[0]);
+            });
         });
-    });
-});
 
-app.get('/depositors', function (req, res) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-
-    // connect to your database
-    sql.connect(config, function (err) {
-
-        if (err) console.log(err);
-
-        // create Request object
-        var request = new sql.Request();
-
-        // query to the database and get the records
-        request.query("select LedgerId, LedgerName, DeptrName, DeptrFatherName, DeptrAddress, convert(varchar, AccOpeBalDate, 5) as AccOpeBalDate, AccOpeBalDr, AccOpeBalCr from AccLedgerMaster JOIN GM_DepositorMaster ON LedgerId = DeptrOwnerLedgerId JOIN AccLedgerOpeBalance ON LedgerId = AccOpeBalLedgerId  WHERE LedgerGroupId = '47' AND AccOpeBalDate = '2022-04-01' ORDER BY LedgerName", function (err, recordset) {
-
-            if (err) console.log(err)
-
-            res.send(recordset.recordsets[0]);
+        app.post('/api/sqlquery', async (req, res) => {
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            const { query } = req.body;
+            pool.query(query, function (err, recordset) {
+                if (err) {
+                    console.log(err)
+                    res.send(err.originalError.info);
+                } else
+                    res.send(recordset.recordsets[0]);
+            });
         });
-    });
-});
 
-app.post('/api/sqlquery', async (req, res) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-
-    const { query } = req.body;
-
-    sql.connect(config, function (err) {
-
-        if (err) console.log(err);
-
-        // create Request object
-        var request = new sql.Request();
-
-        // query to the database and get the records
-        request.query(query, function (err, recordset) {
-
-            if (err) {
-                console.log(err)
-                res.send(err.originalError.info);
-            } else
+        app.get('/transactions', function (req, res) {
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            pool.query("select AccTransLedgerId, AccTransCr, AccTransDr, AccTransType, AccTransVoucherNo, convert(varchar, AccTransDate, 5) as AccTransDate, AccTransNarration from AccTrans WHERE AccTransDate >= '2022-04-01' AND AccTransDate <= '2023-03-31' ORDER BY AccTransDate", function (err, recordset) {
+                if (err) console.log(err)
                 res.send(recordset.recordsets[0]);
+            });
         });
-    });
-});
 
-app.get('/transactions', function (req, res) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-
-    // connect to your database
-    sql.connect(config, function (err) {
-
-        if (err) console.log(err);
-
-        // create Request object
-        var request = new sql.Request();
-
-        // query to the database and get the records
-        request.query("select AccTransLedgerId, AccTransCr, AccTransDr, AccTransType, AccTransVoucherNo, convert(varchar, AccTransDate, 5) as AccTransDate, AccTransNarration from AccTrans WHERE AccTransDate >= '2022-04-01' AND AccTransDate <= '2023-03-31' ORDER BY AccTransDate", function (err, recordset) {
-
-            if (err) console.log(err)
-
-            res.send(recordset.recordsets[0]);
+        app.listen(5000, function () {
+            console.log('Server is running..');
         });
-    });
-});
+    } catch (error) {
+        console.log(error);
+    }
 
-var server = app.listen(5000, function () {
-    console.log('Server is running..');
-});
+}
 
+startServer();
 
-// var config = {
-//     server: 'HOT',
-//     authentication: { type: 'default', options: { userName: 'sa', password: 'sa', } },
-//     options: {
-//         encrypt: false,
-//         trustServerCertificate: true
-
-//     },
-//     database: 'HARIOM2023',
-// };
-
-// sql.connect(config, function (err) {
-
-//     if (err) console.log(err);
-
-// });
-
-
-
-// connectDB();
-
-
-// var config = {
-//     server: "HOT",
-//     port: 1433,
-
-//     options: {
-//         encrypt: false,
-//         database: "HOT2223",
-//         packetSize: 4096,
-//     },
-//     authentication: {
-//         type: "default",
-//         options: {
-//             userName: "sa",
-//             password: "sa",
-//         }
-//     }
-// };
-
-// var connection = new Connection(config);
-
-
-
-// connection.on('error', (err) => {
-//     console.log(err)
-// })
-
-
-// connection.on('connect', function (err) {
-//     // executeStatement();
-//     console.log('connected')
-//     //executeInsert();
-//     if (err) {
-//         console.error(err.message)
-//     }
-
-// }
-// );
-
-
-
-// connection.connect((err) => {
-//     if (err) {
-//         console.log(err)
-//         return;
-//     }
-
-//     console.log('Connected')
-// });
-
+module.exports = {
+    startServer
+}
