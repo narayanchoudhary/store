@@ -26,7 +26,6 @@ async function getPool() {
         console.log('Connected to SQL Server.');
         return pool;
     } catch (error) {
-        console.error('Error connecting to SQL Server:', error);
         throw error;
     }
 }
