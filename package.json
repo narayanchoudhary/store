@@ -2,30 +2,7 @@
   "name": "store",
   "version": "0.1.0",
   "private": true,
-  "main": "public/electron.js",
   "homepage": "./",
-  "author": "Narayan",
-  "description": "This is description of the this application",
-  "build": {
-    "appId": "myAppId",
-    "files": [
-      "build/**/*",
-      "node_modules/**/*"
-    ],
-    "directories": {
-      "buildResources": "assets"
-    },
-    "win": {
-      "target": [
-        {
-          "target": "squirrel",
-          "arch": [
-            "ia32"
-          ]
-        }
-      ]
-    }
-  },
   "dependencies": {
     "@react-pdf/renderer": "^2.3.0",
     "@testing-library/jest-dom": "^5.16.4",
@@ -38,6 +15,7 @@
     "electron-is-dev": "^2.0.0",
     "electron-squirrel-startup": "^1.0.0",
     "express": "^4.18.1",
+    "fs": "^0.0.1-security",
     "moment": "^2.29.4",
     "mssql": "^8.1.2",
     "react": "^18.2.0",

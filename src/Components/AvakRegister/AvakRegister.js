@@ -34,7 +34,7 @@ function AvakRegister() {
   });
 
   useEffect(() => {
-    axios.get('http://narayan:5000')
+    axios.get('http://localhost:5032')
       .then(res => {
         setData(res.data);
 

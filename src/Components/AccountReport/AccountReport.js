@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styles from './AccountReport.module.css';
+import { formatIndianAmount } from '../../Utilities/Utilites';
 
 const AccountReport = ({ year, depositor }) => {
     console.log('depositor: ', depositor);
@@ -12,7 +13,7 @@ const AccountReport = ({ year, depositor }) => {
 
         const fetchOpeningBalance = async () => {
             try {
-                const response = await fetch('http://narayan:5000/api/sqlquery', {
+                const response = await fetch('http://localhost:5032/api/sqlquery', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -52,7 +53,7 @@ const AccountReport = ({ year, depositor }) => {
 
         const fetchAvak = async () => {
             try {
-                const response = await fetch('http://narayan:5000/api/sqlquery', {
+                const response = await fetch('http://localhost:5032/api/sqlquery', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -116,7 +117,7 @@ const AccountReport = ({ year, depositor }) => {
 
         const fetchTransactions = async () => {
             try {
-                const response = await fetch('http://narayan:5000/api/sqlquery', {
+                const response = await fetch('http://localhost:5032/api/sqlquery', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -180,11 +181,12 @@ const AccountReport = ({ year, depositor }) => {
                         <th>Date</th>
                         <th>CSR No</th>
                         <th>Item</th>
+                        <th>Bharti</th>
                         <th>Pkt In</th>
                         <th>Pkt Out</th>
                         <th>Available</th>
                         <th>Particular</th>
-                        <th>Debite</th>
+                        <th>&nbsp; Debite </th>
                         <th>Credit</th>
                         <th>Balance</th>
                     </tr>
@@ -193,41 +195,46 @@ const AccountReport = ({ year, depositor }) => {
                     {
                         <tr>
                             <td>{openingBalance.AccOpeBalDate}</td>
-                            <td colSpan={6} style={{ textAlign: 'left' }}>Opening Balance.....</td>
+                            <td colSpan={7} style={{ textAlign: 'left' }}>Opening Balance.....</td>
                             {
                                 openingBalance.AccOpeBalDr !== 0 ?
                                     <>
-                                        <td className={`${styles.amount} ${styles.debit}`}>{openingBalance.AccOpeBalDr.toFixed(2)}</td>
+                                        <td className={`${styles.amount} ${styles.debit}`}>{formatIndianAmount(openingBalance.AccOpeBalDr)}</td>
                                         <td></td>
                                     </>
                                     :
                                     <>
                                         <td></td>
-                                        <td className={`${styles.amount} ${styles.credit}`}>{openingBalance.AccOpeBalCr.toFixed(2)}</td>
+                                        <td className={`${styles.amount} ${styles.credit}`}>{formatIndianAmount(openingBalance.AccOpeBalCr)}</td>
                                     </>
                             }
                             <td className={styles.amount}>{
-                                balance.toFixed(2)
+                                formatIndianAmount(balance)
                             }</td>
                         </tr>
                     }
 
                     {
                         avakData.map((avak) => {
-                            let amount = (avak.DGPassWeightInQuintal * avak.RadRentPerPeriod).toFixed(2);
-                            balance = (balance - amount);
+                            let amount = (avak.DGPassWeightInQuintal * avak.RadRentPerPeriod);
+                            let weight = Math.round(avak.RadRentPerPeriod > 100 ? avak.DGPassWeightInQuintal * 100 : avak.DGPassWeightInQuintal);
+                            let rate = avak.RadRentPerPeriod > 100 ? avak.RadRentPerPeriod / 100 : avak.RadRentPerPeriod;
+                            let bharti = Math.round(weight / avak.DGPassNoOfLUnit);
                             let style = avak.DReqNo.includes('C') ? styles.chips : styles.rashan;
+                            let bhartiStyle = bharti > 72 || bharti < 50 ? styles.bhartiWarning : styles.bharti;
+                            balance = (balance - amount);
                             return <tr key={avak.DReqNo} className={style}>
                                 <td>01-04-{year.startYear}</td>
                                 <td>{avak.DReqNo}</td>
                                 <td>{avak.ItemName}</td>
+                                <td className={bhartiStyle}>{bharti}</td>
                                 <td className={styles.packet}>{avak.DGPassNoOfLUnit}</td>
                                 <td className={styles.packet}>{avak.DONoOfLUnit}</td>
                                 <td className={styles.packet}>{avak.DGPassNoOfLUnit - avak.DONoOfLUnit}</td>
-                                <td className={styles.particular} >{avak.DGPassWeightInQuintal + ' '}x{' ' + avak.RadRentPerPeriod}</td>
-                                <td className={`${styles.amount} ${styles.debit}`} >{amount}</td>
+                                <td className={styles.particular} >{weight + ' kg '}x{' ' + rate.toFixed(2)}</td>
+                                <td className={`${styles.amount} ${styles.debit}`} >{formatIndianAmount(amount)}</td>
                                 <td></td>
-                                <td className={styles.amount} >{balance.toFixed(2)}</td>
+                                <td className={styles.amount} >{formatIndianAmount(balance)}</td>
                             </tr>
                         })
                     }
@@ -238,21 +245,21 @@ const AccountReport = ({ year, depositor }) => {
                                 <tr key={transaction.AccTransVoucherNo}>
                                     <td>{transaction.AccTransDateE}</td>
                                     <td>{transaction.AccTransVoucherNo}</td>
-                                    <td colSpan={5}>{transaction.AccTransNarration}</td>
+                                    <td colSpan={6}>{transaction.AccTransNarration}</td>
                                     {
                                         transaction.AccTransType === 'Dr' ?
                                             <>
-                                                <td className={`${styles.amount} ${styles.debit}`}> {transaction.AccTransDr.toFixed(2)}</td>
+                                                <td className={`${styles.amount} ${styles.debit}`}> {formatIndianAmount(transaction.AccTransDr)}</td>
                                                 <td> </td>
                                             </>
                                             :
                                             <>
                                                 <td></td>
-                                                <td className={`${styles.amount} ${styles.credit}`} > {transaction.AccTransCr.toFixed(2)}</td>
+                                                <td className={`${styles.amount} ${styles.credit}`} > {formatIndianAmount(transaction.AccTransCr)}</td>
                                             </>
 
                                     }
-                                    <td className={styles.amount} >{balance.toFixed(2)}</td>
+                                    <td className={styles.amount} >{formatIndianAmount(balance)}</td>
                                 </tr>
                             )
                         })
