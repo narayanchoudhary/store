@@ -1,8 +1,8 @@
 import './App.css';
 import {
-  BrowserRouter,
   Routes,
   Route,
+  HashRouter,
 } from "react-router-dom";
 import AvakRegister from './Components/AvakRegister/AvakRegister';
 import Khate from './Components/Khate/Khate';
@@ -11,14 +11,15 @@ import axios from "axios";
 import moment from 'moment';
 import List from './Components/List/List';
 import Root from './Components/Report/Report';
+import Home from './Components/Home/Home';
 
 function App() {
 
   const [accounts, setAccounts] = useState([]);
 
   useEffect(() => {
-    axios.get("http://narayan:5000/depositors").then((dRes) => {
-      axios.get("http://narayan:5000/transactions").then((tRes) => {
+    axios.get("http://localhost:5032/depositors").then((dRes) => {
+      axios.get("http://localhost:5032/transactions").then((tRes) => {
 
         let accounts = [];
         dRes.data.forEach((depositor) => {
@@ -83,14 +84,15 @@ function App() {
 
 
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
-        <Route path="/" element={<Root />} />
+        <Route path="/" element={<Home />}></Route>
+        <Route path="/root" element={<Root />} />
         <Route path="/avakRegister" element={<AvakRegister />} />
         <Route path="/khate" element={<Khate accounts={accounts} />} />
         <Route path='/list' element={<List accounts={accounts} />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
 
   );
 }

@@ -21,6 +21,7 @@
 
 .particular {
     text-align: right;
+    text-transform: lowercase;
 }
 
 .chips {
@@ -55,4 +56,14 @@
 .wrapper {
     margin-bottom: 12px;
     text-transform: capitalize;
+}
+
+.bharti {
+    text-align: center;
+    color: #ccc;
+}
+
+.bhartiWarning {
+    color: orangered;
+    text-align: center;
 }

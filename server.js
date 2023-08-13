@@ -34,6 +34,7 @@ async function startServer() {
         });
 
         app.post('/api/sqlquery', async (req, res) => {
+            console.log('request aayee')
             res.setHeader('Access-Control-Allow-Origin', '*');
             const { query } = req.body;
             pool.query(query, function (err, recordset) {
@@ -53,7 +54,7 @@ async function startServer() {
             });
         });
 
-        app.listen(5000, function () {
+        app.listen(5032, function () {
             console.log('Server is running..');
         });
     } catch (error) {
