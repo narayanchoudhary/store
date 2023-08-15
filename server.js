@@ -39,8 +39,9 @@ async function startServer() {
             const { query } = req.body;
             pool.query(query, function (err, recordset) {
                 if (err) {
-                    console.log(err)
-                    res.send(err.originalError.info);
+                    console.log(err.originalError.info);
+
+                    res.status(500).send(err.originalError.info);
                 } else
                     res.send(recordset.recordsets[0]);
             });

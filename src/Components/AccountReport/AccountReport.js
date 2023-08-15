@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import styles from './AccountReport.module.css';
 import { formatIndianAmount } from '../../Utilities/Utilites';
+import NikasDetailsPopup from '../NikasPopup/NIkasDetailsPopup';
 
 const AccountReport = ({ year, depositor }) => {
     console.log('depositor: ', depositor);
     const [openingBalance, setOpeningBalance] = useState({ AccOpeBalDr: 0, AccOpeBalCr: 0, AccOpeBalDate: 0 });
     const [avakData, setAvakData] = useState([]);
     const [transactions, setTransactions] = useState([]);
+    const [selectedAvak, setSelectedAvak] = useState(null);
+
     console.log('transactions: ', transactions);
+
     useEffect(() => {
-        // Function to send the request to the Express server
 
         const fetchOpeningBalance = async () => {
             try {
@@ -69,7 +72,8 @@ const AccountReport = ({ year, depositor }) => {
                                 DGPassWeightInQuintal,
                                 DGPassRemark,
                                 CONVERT(varchar, DGPassDate, 105) AS DGPassDate,
-                                RadRentPerPeriod
+                                RadRentPerPeriod,
+                                DReqId
                             FROM
                                 GM_DepositGatePass
                             JOIN
@@ -95,7 +99,8 @@ const AccountReport = ({ year, depositor }) => {
                                 DGPassNoOfLUnit,
                                 DGPassWeightInQuintal,
                                 DGPassRemark,
-                                RadRentPerPeriod
+                                RadRentPerPeriod,
+                                DReqId
                             `,
                     }),
                 });
@@ -223,7 +228,7 @@ const AccountReport = ({ year, depositor }) => {
                             let style = avak.DReqNo.includes('C') ? styles.chips : styles.rashan;
                             let bhartiStyle = bharti > 72 || bharti < 50 ? styles.bhartiWarning : styles.bharti;
                             balance = (balance - amount);
-                            return <tr key={avak.DReqNo} className={style}>
+                            return <tr key={avak.DReqNo} className={`${style} ${styles.trHoverEffect}`} onClick={() => setSelectedAvak(avak)}>
                                 <td>01-04-{year.startYear}</td>
                                 <td>{avak.DReqNo}</td>
                                 <td>{avak.ItemName}</td>
@@ -267,6 +272,7 @@ const AccountReport = ({ year, depositor }) => {
 
                 </tbody>
             </table>
+            <NikasDetailsPopup avak={selectedAvak} onClose={() => { setSelectedAvak(null) }} />
         </div>
     )
 };

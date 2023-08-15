@@ -67,3 +67,8 @@
     color: orangered;
     text-align: center;
 }
+
+.trHoverEffect:hover {
+    background-color: #f5f5f5;
+    cursor: pointer;
+}
