@@ -68,7 +68,18 @@
     text-align: center;
 }
 
-.trHoverEffect:hover {
-    background-color: #f5f5f5;
+.chips:hover {
+    background-color: #8ad6f2;
     cursor: pointer;
+}
+
+.rashan:hover {
+    background-color: #eff8b1;
+    cursor: pointer;
+}
+
+.location {
+    max-width: 80px;
+    font-size: 12px;
+    word-break: break-all;
 }

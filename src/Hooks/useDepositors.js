@@ -38,6 +38,7 @@ const useDepositorOptions = () => {
                         value: element.DeptrId,
                         label: capitalizeFirstLetter(element.DeptrName) + ' ' + capitalizeFirstLetter(element.DeptrFatherName) + ' ' + capitalizeFirstLetter(element.DeptrAddress),
                         ledgerId: element.DeptrOwnerLedgerId,
+                        address: element.DeptrAddress,
                     }));
                     setDepositorOptions(depositorOptions);
                 } else {

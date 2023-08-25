@@ -1,49 +1,86 @@
 import React, { useEffect, useState } from 'react';
-import Select from 'react-select';
+import Select, { createFilter } from 'react-select';
 import useDepositorOptions from '../../Hooks/useDepositors';
 
+// Custom styles to capitalize the options
+const customStyles = {
+    option: (provided) => ({
+        ...provided,
+        textTransform: 'capitalize',
+    }),
+    singleValue: (provided) => ({
+        ...provided,
+        textTransform: 'capitalize',
+    }),
+    menu: (provided) => ({
+        ...provided,
+        width: "max-content",
+        minWidth: "100%"
+    }),
+};
 
 const SelectDepositor = ({ onChange }) => {
+    // Fetch depositor options using the custom hook
     const depositorOptions = useDepositorOptions();
 
-    const [selectedOption, setSelectedOption] = useState(null);
+    // State to store selected address, selected depositor, and unique addresses
+    const [selectedAddress, setSelectedAddress] = useState({ value: 'All', label: 'All' });
+    const [selectedDepositor, setSelectedDepositor] = useState(null);
 
+    // Generate unique addresses and sort them alphabetically
+    const uniqueAddresses = Array.from(new Set(depositorOptions.map((depositor) => depositor.address))).sort();
+
+    // Add "All" option at the beginning
+    uniqueAddresses.unshift('All');
+
+    // Filter depositors based on selected address ('All' means no filter)
+    let filteredDepositors;
+    if (selectedAddress === null) {
+        filteredDepositors = [];
+    } else {
+        filteredDepositors = selectedAddress.value === 'All'
+            ? depositorOptions
+            : depositorOptions.filter((depositor) => depositor.address === selectedAddress.value);
+    }
+
+    // Notify parent component about selected depositor change
     useEffect(() => {
-        onChange(selectedOption);
-    }, [selectedOption, onChange]);
-
-    // Custom styles to capitalize the options
-    const customStyles = {
-        option: (provided) => ({
-            ...provided,
-            textTransform: 'capitalize',
-        }),
-        singleValue: (provided) => ({
-            ...provided,
-            textTransform: 'capitalize',
-        }),
-        menu: (provided) => ({
-            ...provided,
-            width: "max-content",
-            minWidth: "100%"
-        }),
-    };
-
+        onChange(selectedDepositor);
+    }, [selectedDepositor, onChange]);
 
     return (
-        <div style={{ flex: 1 }}>
+        <>
+            {/* Dropdown for selecting address */}
+            <div style={{ width: '30%' }}>
+                <Select
+                    options={uniqueAddresses.map((address) => ({ value: address, label: address }))}
+                    value={selectedAddress}
+                    onChange={(selectedAddress) => { setSelectedAddress(selectedAddress); setSelectedDepositor(null); }}
+                    styles={customStyles}
+                    isClearable
+                    isSearchable
+                    placeholder='Select Village'
+                    filterOption={createFilter({ matchFrom: "start" })}
 
-            <Select
-                options={depositorOptions}
-                value={selectedOption}
-                onChange={(selectedOption) => { setSelectedOption(selectedOption); }}
-                styles={customStyles}
-                isClearable
-                isSearchable
-                placeholder='Select Depositor'
-                autoFocus
-            />
-        </div>
+                />
+            </div>
+
+            {/* Dropdown for selecting depositor */}
+            <div style={{ width: '50%' }}>
+                <Select
+                    options={filteredDepositors}
+                    value={selectedDepositor}
+                    onChange={(selectedDepositor) => { setSelectedDepositor(selectedDepositor); }}
+                    styles={customStyles}
+                    isClearable
+                    isSearchable
+                    placeholder='Select Depositor'
+                    autoFocus
+                    filterOption={createFilter({ matchFrom: "start" })}
+
+                />
+            </div>
+        </>
     );
 };
 

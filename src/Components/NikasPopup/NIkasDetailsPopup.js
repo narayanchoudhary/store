@@ -29,7 +29,7 @@ const NikasPopup = ({ avak, onClose }) => {
 
                 if (response.ok) {
                     const data = await response.json();
-                    console.log('Nikas Data:', data);
+                    //console.log('Nikas Data:', data);
                     setNikasData(data);
                     setError(null);
                     setLoading(false);

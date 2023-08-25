@@ -4,13 +4,13 @@ import { formatIndianAmount } from '../../Utilities/Utilites';
 import NikasDetailsPopup from '../NikasPopup/NIkasDetailsPopup';
 
 const AccountReport = ({ year, depositor }) => {
-    console.log('depositor: ', depositor);
+    //console.log('depositor: ', depositor);
     const [openingBalance, setOpeningBalance] = useState({ AccOpeBalDr: 0, AccOpeBalCr: 0, AccOpeBalDate: 0 });
     const [avakData, setAvakData] = useState([]);
     const [transactions, setTransactions] = useState([]);
     const [selectedAvak, setSelectedAvak] = useState(null);
 
-    console.log('transactions: ', transactions);
+    //console.log('transactions: ', transactions);
 
     useEffect(() => {
 
@@ -39,7 +39,7 @@ const AccountReport = ({ year, depositor }) => {
 
                 if (response.ok) {
                     const data = await response.json();
-                    console.log('Opeing balance:', data);
+                    //console.log('Opeing balance:', data);
                     if (data.length !== 0)
                         setOpeningBalance(data[0]);
                     else
@@ -51,8 +51,6 @@ const AccountReport = ({ year, depositor }) => {
                 console.error('Error:', error);
             }
         };
-
-        depositor && depositor.value && fetchOpeningBalance(); // Call the function to send the request on mount
 
         const fetchAvak = async () => {
             try {
@@ -107,7 +105,7 @@ const AccountReport = ({ year, depositor }) => {
 
                 if (response.ok) {
                     const data = await response.json();
-                    console.log('Avak received:', data);
+                    //console.log('Avak received:', data);
                     setAvakData(data);
                     // Process the received data as needed
                 } else {
@@ -117,8 +115,6 @@ const AccountReport = ({ year, depositor }) => {
                 console.error('Error:', error);
             }
         };
-
-        depositor && depositor.value && fetchAvak(); // Call the function to send the request on mount
 
         const fetchTransactions = async () => {
             try {
@@ -159,7 +155,7 @@ const AccountReport = ({ year, depositor }) => {
 
                 if (response.ok) {
                     const data = await response.json();
-                    console.log('Ledger:', data);
+                    //console.log('Ledger:', data);
                     setTransactions(data);
                     // Process the received data as needed
                 } else {
@@ -170,11 +166,21 @@ const AccountReport = ({ year, depositor }) => {
             }
         };
 
-        depositor && depositor.value && fetchTransactions(); // Call the function to send the request on mount
+        if (depositor === null) {
+            setOpeningBalance(null)
+            setAvakData([]);
+            setTransactions([]);
+        } else {
+            fetchOpeningBalance();
+            fetchAvak();
+            fetchTransactions();
+        }
 
     }, [depositor, year]);
 
-    let balance = openingBalance.AccOpeBalCr - openingBalance.AccOpeBalDr;
+    let balance;
+    if (openingBalance) balance = openingBalance.AccOpeBalCr - openingBalance.AccOpeBalDr;
+
 
 
     return (
@@ -190,6 +196,7 @@ const AccountReport = ({ year, depositor }) => {
                         <th>Pkt In</th>
                         <th>Pkt Out</th>
                         <th>Available</th>
+                        <th>Location</th>
                         <th>Particular</th>
                         <th>&nbsp; Debite </th>
                         <th>Credit</th>
@@ -197,10 +204,10 @@ const AccountReport = ({ year, depositor }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {
+                    {openingBalance ?
                         <tr>
                             <td>{openingBalance.AccOpeBalDate}</td>
-                            <td colSpan={7} style={{ textAlign: 'left' }}>Opening Balance.....</td>
+                            <td colSpan={8} style={{ textAlign: 'left' }}>Opening Balance.....</td>
                             {
                                 openingBalance.AccOpeBalDr !== 0 ?
                                     <>
@@ -217,6 +224,8 @@ const AccountReport = ({ year, depositor }) => {
                                 formatIndianAmount(balance)
                             }</td>
                         </tr>
+                        :
+                        null
                     }
 
                     {
@@ -228,7 +237,7 @@ const AccountReport = ({ year, depositor }) => {
                             let style = avak.DReqNo.includes('C') ? styles.chips : styles.rashan;
                             let bhartiStyle = bharti > 72 || bharti < 50 ? styles.bhartiWarning : styles.bharti;
                             balance = (balance - amount);
-                            return <tr key={avak.DReqNo} className={`${style} ${styles.trHoverEffect}`} onClick={() => setSelectedAvak(avak)}>
+                            return <tr key={avak.DReqNo} className={`${style}`} onClick={() => setSelectedAvak(avak)}>
                                 <td>01-04-{year.startYear}</td>
                                 <td>{avak.DReqNo}</td>
                                 <td>{avak.ItemName}</td>
@@ -236,6 +245,7 @@ const AccountReport = ({ year, depositor }) => {
                                 <td className={styles.packet}>{avak.DGPassNoOfLUnit}</td>
                                 <td className={styles.packet}>{avak.DONoOfLUnit}</td>
                                 <td className={styles.packet}>{avak.DGPassNoOfLUnit - avak.DONoOfLUnit}</td>
+                                <td className={styles.location}>{avak.DGPassRemark}</td>
                                 <td className={styles.particular} >{weight + ' kg '}x{' ' + rate.toFixed(2)}</td>
                                 <td className={`${styles.amount} ${styles.debit}`} >{formatIndianAmount(amount)}</td>
                                 <td></td>
@@ -250,7 +260,7 @@ const AccountReport = ({ year, depositor }) => {
                                 <tr key={transaction.AccTransVoucherNo}>
                                     <td>{transaction.AccTransDateE}</td>
                                     <td>{transaction.AccTransVoucherNo}</td>
-                                    <td colSpan={6}>{transaction.AccTransNarration}</td>
+                                    <td colSpan={7}>{transaction.AccTransNarration}</td>
                                     {
                                         transaction.AccTransType === 'Dr' ?
                                             <>

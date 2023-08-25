@@ -19,12 +19,14 @@ const SelectYear = ({ onChange }) => {
     }, []);
 
     return (
-        <Select
-            options={options}
-            value={selectedOption}
-            onChange={(selectedOption) => { setSelectedOption(selectedOption); }}
-            isSearchable={false}
-        />
+        <div>
+            <Select
+                options={options}
+                value={selectedOption}
+                onChange={(selectedOption) => { setSelectedOption(selectedOption); }}
+                isSearchable={false}
+            />
+        </div>
     );
 };
 

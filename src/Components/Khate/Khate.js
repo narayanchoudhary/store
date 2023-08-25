@@ -1,8 +1,8 @@
 import "./Khate.css";
 
 
-export default function Khate({accounts}) {  
-  console.log(accounts);
+export default function Khate({ accounts }) {
+  //console.log(accounts);
 
   return (
     <div className="accountContainer">

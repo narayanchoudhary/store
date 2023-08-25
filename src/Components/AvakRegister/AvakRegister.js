@@ -62,7 +62,7 @@ function AvakRegister() {
         setItemFilterOptions(uniqueItems);
 
       }).catch(err => {
-        console.log(err);
+        //console.log(err);
       });
   }, []);
 

@@ -1,6 +1,18 @@
 .form {
     display: flex;
-    justify-content: space-around;
+    width: 70%;
+    margin: auto;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    position: sticky;
+    top: 0;
+    padding: 6px 10px 6px 10px;
+    background-color: antiquewhite;
+    border-radius: 30px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    /* Horizontal offset, vertical offset, blur radius, color */
+
 }
 
 .report {
@@ -9,4 +21,10 @@
     justify-content: center;
     margin-top: 10px;
     flex-direction: column;
+}
+
+@media print {
+    .form {
+        display: none !important;
+    }
 }
