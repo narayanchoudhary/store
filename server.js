@@ -27,7 +27,7 @@ async function startServer() {
 
         app.get('/depositors', function (req, res) {
             res.setHeader('Access-Control-Allow-Origin', '*');
-            pool.query("select LedgerId, LedgerName, DeptrName, DeptrFatherName, DeptrAddress, convert(varchar, AccOpeBalDate, 5) as AccOpeBalDate, AccOpeBalDr, AccOpeBalCr from AccLedgerMaster JOIN GM_DepositorMaster ON LedgerId = DeptrOwnerLedgerId JOIN AccLedgerOpeBalance ON LedgerId = AccOpeBalLedgerId  WHERE LedgerGroupId = '47' AND AccOpeBalDate = '2022-04-01' ORDER BY LedgerName", function (err, recordset) {
+            pool.query("select LedgerId, LedgerName, DeptrName, DeptrFatherName, DeptrAddress, convert(varchar, AccOpeBalDate, 5) as AccOpeBalDate, AccOpeBalDr, AccOpeBalCr from AccLedgerMaster JOIN GM_DepositorMaster ON LedgerId = DeptrOwnerLedgerId JOIN AccLedgerOpeBalance ON LedgerId = AccOpeBalLedgerId  WHERE LedgerGroupId = '47' AND AccOpeBalDate = '2023-04-01' ORDER BY LedgerName", function (err, recordset) {
                 if (err) console.log(err)
                 res.send(recordset.recordsets[0]);
             });
@@ -49,7 +49,7 @@ async function startServer() {
 
         app.get('/transactions', function (req, res) {
             res.setHeader('Access-Control-Allow-Origin', '*');
-            pool.query("select AccTransLedgerId, AccTransCr, AccTransDr, AccTransType, AccTransVoucherNo, convert(varchar, AccTransDate, 5) as AccTransDate, AccTransNarration from AccTrans WHERE AccTransDate >= '2022-04-01' AND AccTransDate <= '2023-03-31' ORDER BY AccTransDate", function (err, recordset) {
+            pool.query("select AccTransLedgerId, AccTransCr, AccTransDr, AccTransType, AccTransVoucherNo, convert(varchar, AccTransDate, 5) as AccTransDate, AccTransNarration from AccTrans WHERE AccTransDate >= '2023-04-01' AND AccTransDate <= '2024-03-31' ORDER BY AccTransDate", function (err, recordset) {
                 if (err) console.log(err)
                 res.send(recordset.recordsets[0]);
             });
